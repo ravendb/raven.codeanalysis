@@ -10,7 +10,7 @@ using Raven.CodeAnalysis.Logging;
 namespace Raven.CodeAnalysis.Test
 {
 	[TestClass]
-	public class UnitTest : CodeFixVerifier
+	public class LoggingTests : CodeFixVerifier
 	{
 
 		//No diagnostics expected to show up

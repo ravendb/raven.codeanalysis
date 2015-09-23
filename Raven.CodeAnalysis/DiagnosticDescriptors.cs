@@ -11,5 +11,13 @@ namespace Raven.CodeAnalysis
 			category: DiagnosticCategories.Logging,
 			defaultSeverity: DiagnosticSeverity.Error,
 			isEnabledByDefault: true);
+
+		public static readonly DiagnosticDescriptor ConfigureAwait = new DiagnosticDescriptor(
+			id: DiagnosticIds.ConfigureAwait,
+			title: "Awaited operations must have ConfigureAwait(false)",
+			messageFormat: "Awaited operations must have ConfigureAwait(false)",
+			category: DiagnosticCategories.ConfigureAwait,
+			defaultSeverity: DiagnosticSeverity.Error,
+			isEnabledByDefault: true);
 	}
 }
