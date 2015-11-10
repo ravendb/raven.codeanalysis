@@ -6,7 +6,7 @@ namespace Raven.CodeAnalysis
     {
 		public static readonly DiagnosticDescriptor Logging = new DiagnosticDescriptor(
 			id: DiagnosticIds.Logging,
-			title: "Wrap Debug and DebugExcepption with IsDebugEnabled condition",
+			title: "Wrap Debug and DebugException with IsDebugEnabled condition",
 			messageFormat: "Wrap Debug and DebugException with IsDebugEnabled condition",
 			category: DiagnosticCategories.Logging,
 			defaultSeverity: DiagnosticSeverity.Error,
@@ -19,5 +19,13 @@ namespace Raven.CodeAnalysis
 			category: DiagnosticCategories.ConfigureAwait,
 			defaultSeverity: DiagnosticSeverity.Error,
 			isEnabledByDefault: true);
-	}
+
+        public static readonly DiagnosticDescriptor GetConfigurationEntryKey = new DiagnosticDescriptor(
+            id: DiagnosticIds.GetConfigurationEntryKey,
+            title: "Specified property is not a configuration entry",
+            messageFormat: "'{0}' property is not decorated with [ConfigurationEntry] attribute",
+            category: DiagnosticCategories.Configuration,
+            defaultSeverity: DiagnosticSeverity.Error,
+            isEnabledByDefault: true);
+    }
 }
