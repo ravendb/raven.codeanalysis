@@ -7,5 +7,7 @@
 		public const string ConfigureAwait = "RDB0002";
 
         public const string GetConfigurationEntryKey = "RDB0003";
+
+        public const string EmptyOrJustLoggingExceptionHandler = "RDB0004";
     }
 }

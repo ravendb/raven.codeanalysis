@@ -7,5 +7,7 @@
 		public const string ConfigureAwait = "ConfigureAwait";
 
         public const string Configuration = "Configuration";
+
+        public const string ExceptionBlock = "ExceptionBlock";
     }
 }

@@ -27,5 +27,15 @@ namespace Raven.CodeAnalysis
             category: DiagnosticCategories.Configuration,
             defaultSeverity: DiagnosticSeverity.Error,
             isEnabledByDefault: true);
+
+
+        public static readonly DiagnosticDescriptor EmptyOrJustLoggingExceptionHandler = new DiagnosticDescriptor(
+            id: DiagnosticIds.EmptyOrJustLoggingExceptionHandler,
+            title: "Exception handler is empty or just logging",
+            messageFormat: "This exception should be properly handled",
+            category: DiagnosticCategories.ExceptionBlock,
+            defaultSeverity: DiagnosticSeverity.Warning,
+            isEnabledByDefault: true);
+
     }
 }
