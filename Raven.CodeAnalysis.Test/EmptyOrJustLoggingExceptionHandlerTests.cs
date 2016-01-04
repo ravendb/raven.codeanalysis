@@ -59,6 +59,18 @@ namespace Raven.CodeAnalysis.Test
         }
 
         [TestMethod]
+        public void DoNotGenerateDiagnosticWhenDisposingObjects()
+        {
+            var test = @"
+            try
+            {
+                foo.Dispose();
+            }
+            catch {}".AsMethodCode();
+            VerifyCSharpDiagnostic(test);
+        }
+
+        [TestMethod]
         public void GenerateDiagnosticWhenCatchIsAnEmptyBlock()
         {
             var test = @"

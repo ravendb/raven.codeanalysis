@@ -35,8 +35,30 @@ namespace Raven.CodeAnalysis.ExceptionBlock
             if (statements.Count > 0 && !IsLogging(statements[0]))
                 return;
 
+            if (statements.Count == 0 && AreTryingToDispose(catchStatement.Parent as TryStatementSyntax))
+                return;
+            
             var diagnostic = Diagnostic.Create(DiagnosticDescriptors.EmptyOrJustLoggingExceptionHandler, catchStatement.GetLocation());
             context.ReportDiagnostic(diagnostic);
+        }
+
+        private static bool AreTryingToDispose(TryStatementSyntax tryStatement)
+        {
+            if (tryStatement?.Block == null) return false;
+            
+            var statements = tryStatement.Block.Statements;
+            if (statements.Count != 1) return false;
+
+            var statement = statements[0] as ExpressionStatementSyntax;
+            if (statement == null) return false;
+
+            var invocation = statement.Expression as InvocationExpressionSyntax;
+            if (invocation == null) return false;
+
+            var memberAccess = invocation.Expression as MemberAccessExpressionSyntax;
+            if (memberAccess == null) return false;
+
+            return memberAccess.Name.ToString() == "Dispose";
         }
 
         
