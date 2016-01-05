@@ -71,6 +71,18 @@ namespace Raven.CodeAnalysis.Test
         }
 
         [TestMethod]
+        public void DoNotGenerateDiagnosticWhenVerifyingAndDisposingObjects()
+        {
+            var test = @"
+            try
+            {
+                if (foo != null) foo.Dispose();
+            }
+            catch {}".AsMethodCode();
+            VerifyCSharpDiagnostic(test);
+        }
+
+        [TestMethod]
         public void GenerateDiagnosticWhenCatchIsAnEmptyBlock()
         {
             var test = @"
@@ -141,6 +153,35 @@ namespace Raven.CodeAnalysis.Test
                 Locations = new[]
                 {
                     new DiagnosticResultLocation("Test0.cs", 14, 13)
+                }
+            });
+        }
+
+        [TestMethod]
+        public void GenerateDiagnosticWhenCatchIsLoggingAndBreak()
+        {
+            var test = @"
+            for (var i = 0; i < 10; i++) 
+            {
+                try
+                {
+                    // do something
+                }
+                catch (Exception ex)
+                {
+                    log.Error(""bla bla"", ex);
+                    break;
+                }
+            }".AsMethodCode();
+
+            VerifyCSharpDiagnostic(test, new DiagnosticResult
+            {
+                Id = DiagnosticIds.EmptyOrJustLoggingExceptionHandler,
+                Message = "This exception should be properly handled",
+                Severity = DiagnosticSeverity.Warning,
+                Locations = new[]
+                {
+                    new DiagnosticResultLocation("Test0.cs", 16, 17)
                 }
             });
         }

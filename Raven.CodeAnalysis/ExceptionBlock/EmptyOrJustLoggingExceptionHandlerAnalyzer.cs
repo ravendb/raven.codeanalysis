@@ -1,6 +1,6 @@
 ﻿using System.Collections.Immutable;
 using System.Linq;
-using System.Threading;
+
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
@@ -29,7 +29,7 @@ namespace Raven.CodeAnalysis.ExceptionBlock
             var statements = block.Statements;
 
             if (statements.Count > 2) return;
-            if (statements.Count == 2 && !(statements[1] is ReturnStatementSyntax))
+            if (statements.Count == 2 && !(statements[1] is ReturnStatementSyntax) && !(statements[1] is BreakStatementSyntax))
                 return;
 
             if (statements.Count > 0 && !IsLogging(statements[0]))
@@ -44,24 +44,40 @@ namespace Raven.CodeAnalysis.ExceptionBlock
 
         private static bool AreTryingToDispose(TryStatementSyntax tryStatement)
         {
-            if (tryStatement?.Block == null) return false;
-            
-            var statements = tryStatement.Block.Statements;
-            if (statements.Count != 1) return false;
+            var statements = tryStatement?.Block?.Statements;
+            if (statements?.Count != 1) return false;
 
-            var statement = statements[0] as ExpressionStatementSyntax;
-            if (statement == null) return false;
+            var statement = statements?.FirstOrDefault();
 
-            var invocation = statement.Expression as InvocationExpressionSyntax;
-            if (invocation == null) return false;
+            return
+                AreTryingToDisposeDirectly(statement as ExpressionStatementSyntax) ||
+                AreTryingToDisposeCheckingIfObjectIsNotNull(statement as IfStatementSyntax);
+        }
 
-            var memberAccess = invocation.Expression as MemberAccessExpressionSyntax;
+        private static bool AreTryingToDisposeDirectly(ExpressionStatementSyntax statement)
+        {
+            var invocation = statement?.Expression as InvocationExpressionSyntax;
+            var memberAccess = invocation?.Expression as MemberAccessExpressionSyntax;
             if (memberAccess == null) return false;
 
             return memberAccess.Name.ToString() == "Dispose";
         }
 
-        
+        private static bool AreTryingToDisposeCheckingIfObjectIsNotNull(IfStatementSyntax ifStatement)
+        {
+            if (ifStatement == null) return false;
+
+            if (ifStatement.Else != null) return false;
+            
+            var statement = ifStatement.Statement as ExpressionStatementSyntax;
+            var invocation = statement?.Expression as InvocationExpressionSyntax;
+            var memberAccess = invocation?.Expression as MemberAccessExpressionSyntax;
+            if (memberAccess == null) return false;
+
+            return memberAccess.Name.ToString() == "Dispose";
+        }
+
+
         private static bool IsLogging(StatementSyntax statement)
         {
             var ess = statement as ExpressionStatementSyntax;
@@ -71,9 +87,7 @@ namespace Raven.CodeAnalysis.ExceptionBlock
             var firstArgument = arguments?.FirstOrDefault()?.Expression;
 
             var firstArgumentLiteral = firstArgument as LiteralExpressionSyntax;
-            if (firstArgumentLiteral == null) return false;
-
-            return firstArgumentLiteral.IsKind(SyntaxKind.StringLiteralExpression);
+            return firstArgumentLiteral != null && firstArgumentLiteral.IsKind(SyntaxKind.StringLiteralExpression);
         }
 
         private static bool HasComments(SyntaxNode block)
