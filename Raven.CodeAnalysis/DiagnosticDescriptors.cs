@@ -37,5 +37,13 @@ namespace Raven.CodeAnalysis
             defaultSeverity: DiagnosticSeverity.Warning,
             isEnabledByDefault: true);
 
+        public static readonly DiagnosticDescriptor TodoCommentOnExceptionHandler = new DiagnosticDescriptor(
+            id: DiagnosticIds.TodoCommentOnExceptionHandler,
+            title: "ToDo Comments on Exception Handler",
+            messageFormat: "ToDo comments should be resolved and this exception should be properly handled",
+            category: DiagnosticCategories.ExceptionBlock,
+            defaultSeverity: DiagnosticSeverity.Warning,
+            isEnabledByDefault: true);
+
     }
 }

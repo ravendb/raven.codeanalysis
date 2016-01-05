@@ -46,8 +46,7 @@ namespace Raven.CodeAnalysis.ExceptionBlock
         {
             var statements = tryStatement?.Block?.Statements;
             if (statements?.Count != 1) return false;
-
-            var statement = statements?.FirstOrDefault();
+            var statement = statements.Value.FirstOrDefault();
 
             return
                 AreTryingToDisposeDirectly(statement as ExpressionStatementSyntax) ||

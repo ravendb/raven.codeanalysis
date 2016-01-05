@@ -94,7 +94,8 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="EmptyOrJustLoggingExceptionHandlerTests.cs" />
+    <Compile Include="EmptyOrJustLoggingExceptionHandlerTests - Copy.cs" />
+    <Compile Include="TodoCommentOnExceptionHandlerTests.cs" />
     <Compile Include="GetConfigurationEntryKeyTests.cs" />
     <Compile Include="ConfigureAwaitTests.cs" />
     <Compile Include="Helpers\CompleteCodeExtensions.cs" />

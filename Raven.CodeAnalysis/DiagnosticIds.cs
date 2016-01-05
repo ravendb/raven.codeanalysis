@@ -9,5 +9,7 @@
         public const string GetConfigurationEntryKey = "RDB0003";
 
         public const string EmptyOrJustLoggingExceptionHandler = "RDB0004";
+
+        public const string TodoCommentOnExceptionHandler = "RDB0005";
     }
 }
