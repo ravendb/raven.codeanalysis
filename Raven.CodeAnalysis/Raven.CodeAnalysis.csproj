@@ -37,6 +37,10 @@
     <Compile Include="DiagnosticCategories.cs" />
     <Compile Include="DiagnosticDescriptors.cs" />
     <Compile Include="DiagnosticIds.cs" />
+    <Compile Include="ExceptionBlock\EmptyOrJustLoggingExceptionHandlerAnalyzer.cs" />
+    <Compile Include="ExceptionBlock\TodoCommentOnExceptionHandlerAnalyzer.cs" />
+    <Compile Include="Extensions\CSharpAnalyzerExtensions.cs" />
+    <Compile Include="Extensions\CSharpGeneratedCodeAnalysisExtensions.cs" />
     <Compile Include="Logging\LoggingAnalyzer.cs" />
     <Compile Include="Logging\LoggingCodeFix.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
