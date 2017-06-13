@@ -1,13 +1,14 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <package xmlns="http://schemas.microsoft.com/packaging/2011/10/nuspec.xsd">
   <metadata minClientVersion="2.12">
-    <version>1.0.2</version>
+    <version>1.0.3</version>
     <id>Raven.CodeAnalysis</id>
     <description>Raven.CodeAnalysis</description>
     <authors>Hibernating Rhinos</authors>
     <dependencies>
       <group>
-        <dependency id="Microsoft.CodeAnalysis.CSharp" version="2.2.0" />
+        <dependency id="Microsoft.CodeAnalysis.CSharp" version="2.2.0" exclude="Build,Analyzers" />
+        <dependency id="Microsoft.CodeAnalysis.Common" version="2.2.0" exclude="Build,Analyzers" />
       </group>
     </dependencies>
   </metadata>
