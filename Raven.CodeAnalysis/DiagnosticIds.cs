@@ -11,5 +11,7 @@
         public const string EmptyOrJustLoggingExceptionHandler = "RDB0004";
 
         public const string TodoCommentOnExceptionHandler = "RDB0005";
+
+        public const string ValueTupleVariablesMustBeUppercase = "RDB0006";
     }
 }

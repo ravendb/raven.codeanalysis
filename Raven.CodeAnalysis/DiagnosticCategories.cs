@@ -9,5 +9,7 @@
         public const string Configuration = "Configuration";
 
         public const string ExceptionBlock = "ExceptionBlock";
+
+        public const string ValueTuple = "ValueTuple";
     }
 }
