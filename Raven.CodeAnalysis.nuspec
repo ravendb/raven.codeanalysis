@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <package xmlns="http://schemas.microsoft.com/packaging/2011/10/nuspec.xsd">
   <metadata minClientVersion="2.12">
-    <version>1.0.5</version>
+    <version>1.0.6</version>
     <id>Raven.CodeAnalysis</id>
     <description>Raven.CodeAnalysis</description>
     <authors>Hibernating Rhinos</authors>

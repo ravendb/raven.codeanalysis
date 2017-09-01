@@ -1,5 +1,4 @@
 ﻿using System.Collections.Immutable;
-using System.Linq;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
@@ -22,10 +21,18 @@ namespace Raven.CodeAnalysis.ValueTuple
             var mds = (MethodDeclarationSyntax)context.Node;
             var rs = mds.ReturnType;
 
-            if (rs.IsKind(SyntaxKind.TupleType) == false)
+            Validate(context, rs);
+
+            foreach (var parameter in mds.ParameterList.Parameters)
+                Validate(context, parameter.Type);
+        }
+
+        private static void Validate(SyntaxNodeAnalysisContext context, TypeSyntax syntax)
+        {
+            if (syntax.IsKind(SyntaxKind.TupleType) == false)
                 return;
 
-            var tts = (TupleTypeSyntax)rs;
+            var tts = (TupleTypeSyntax)syntax;
             foreach (var ttse in tts.Elements)
             {
                 var identifier = ttse.Identifier;
@@ -36,7 +43,7 @@ namespace Raven.CodeAnalysis.ValueTuple
                 if (string.IsNullOrEmpty(text) || char.IsLower(text[0]) == false)
                     continue;
 
-                ReportDiagnostic(context, rs);
+                ReportDiagnostic(context, syntax);
                 return;
             }
         }
