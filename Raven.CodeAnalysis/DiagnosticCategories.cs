@@ -11,5 +11,7 @@
         public const string ExceptionBlock = "ExceptionBlock";
 
         public const string ValueTuple = "ValueTuple";
+
+        public const string CancellationToken = "CancellationToken";
     }
 }

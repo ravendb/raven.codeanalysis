@@ -53,5 +53,12 @@ namespace Raven.CodeAnalysis
             defaultSeverity: DiagnosticSeverity.Warning,
             isEnabledByDefault: true);
 
+        public static readonly DiagnosticDescriptor CancellationTokenMustBeLastArgument = new DiagnosticDescriptor(
+            id: DiagnosticIds.CancellationTokenMustBeLastArgument,
+            title: "CancellationToken must be a last argument",
+            messageFormat: "CancellationToken must be a last argument",
+            category: DiagnosticCategories.CancellationToken,
+            defaultSeverity: DiagnosticSeverity.Error,
+            isEnabledByDefault: true);
     }
 }

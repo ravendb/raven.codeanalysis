@@ -13,5 +13,7 @@
         public const string TodoCommentOnExceptionHandler = "RDB0005";
 
         public const string ValueTupleVariablesMustBeUppercase = "RDB0006";
+
+        public const string CancellationTokenMustBeLastArgument = "RDB0007";
     }
 }
