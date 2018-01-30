@@ -15,5 +15,7 @@
         public const string ValueTupleVariablesMustBeUppercase = "RDB0006";
 
         public const string CancellationTokenMustBeLastArgument = "RDB0007";
+
+        public const string TaskCompletionSourceMustHaveRunContinuationsAsynchronouslySet = "RDB0008";
     }
 }

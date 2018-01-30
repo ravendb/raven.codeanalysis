@@ -60,5 +60,13 @@ namespace Raven.CodeAnalysis
             category: DiagnosticCategories.CancellationToken,
             defaultSeverity: DiagnosticSeverity.Error,
             isEnabledByDefault: true);
+
+        public static readonly DiagnosticDescriptor TaskCompletionSourceMustHaveRunContinuationsAsynchronouslySet = new DiagnosticDescriptor(
+            id: DiagnosticIds.TaskCompletionSourceMustHaveRunContinuationsAsynchronouslySet,
+            title: "TaskCompletionSource must have TaskCreationOptions.RunContinuationsAsynchronously set",
+            messageFormat: "TaskCompletionSource must have TaskCreationOptions.RunContinuationsAsynchronously set",
+            category: DiagnosticCategories.TaskCompletionSource,
+            defaultSeverity: DiagnosticSeverity.Error,
+            isEnabledByDefault: true);
     }
 }

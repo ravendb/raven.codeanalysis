@@ -13,5 +13,7 @@
         public const string ValueTuple = "ValueTuple";
 
         public const string CancellationToken = "CancellationToken";
+
+        public const string TaskCompletionSource = "TaskCompletionSource";
     }
 }
