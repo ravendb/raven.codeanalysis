@@ -68,5 +68,13 @@ namespace Raven.CodeAnalysis
             category: DiagnosticCategories.TaskCompletionSource,
             defaultSeverity: DiagnosticSeverity.Error,
             isEnabledByDefault: true);
+
+        public static readonly DiagnosticDescriptor MustNotReturnTaskInsideUsingStatementAnalyzer = new DiagnosticDescriptor(
+            id: DiagnosticIds.MustNotReturnTaskInsideUsingStatementAnalyzer,
+            title: "Cannot return task without awaiting it inside using statement",
+            messageFormat: "Cannot return task without awaiting it inside using statement",
+            category: DiagnosticCategories.ReturningTaskInsideUsingStatement,
+            defaultSeverity: DiagnosticSeverity.Error,
+            isEnabledByDefault: true);
     }
 }
