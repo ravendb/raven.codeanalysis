@@ -17,5 +17,7 @@
         public const string CancellationTokenMustBeLastArgument = "RDB0007";
 
         public const string TaskCompletionSourceMustHaveRunContinuationsAsynchronouslySet = "RDB0008";
+
+        public const string MustNotReturnTaskInsideUsingStatementAnalyzer = "RDB0009";
     }
 }

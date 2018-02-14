@@ -15,5 +15,7 @@
         public const string CancellationToken = "CancellationToken";
 
         public const string TaskCompletionSource = "TaskCompletionSource";
+
+        public const string ReturningTaskInsideUsingStatement = "ReturnTaskInsideUsingStatement";
     }
 }
