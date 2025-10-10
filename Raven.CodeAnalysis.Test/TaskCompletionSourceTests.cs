@@ -11,7 +11,7 @@ namespace Raven.CodeAnalysis.Test
     {
         //No diagnostics expected to show up
         [TestMethod]
-        public void TestMethod1()
+        public void Generic_with_RunContinuationsAsynchronously()
         {
             const string input = @"
 class C
@@ -26,7 +26,7 @@ class C
         }
 
         [TestMethod]
-        public void TestMethod2()
+        public void Generic_without_RunContinuationsAsynchronously()
         {
             const string input = @"
 class C
@@ -36,6 +36,68 @@ class C
     private void Method2() { var tcs = new System.Threading.Tasks.TaskCompletionSource<string>(); }
 
 	private void Method3() { var tcs = new TaskCompletionSource<string>(TaskContinuationOptions.AttachedToParent); }
+}";
+            VerifyCSharpDiagnostic(
+                input,
+                new DiagnosticResult
+                {
+                    Id = DiagnosticIds.TaskCompletionSourceMustHaveRunContinuationsAsynchronouslySet,
+                    Message = "TaskCompletionSource must have TaskCreationOptions.RunContinuationsAsynchronously set",
+                    Severity = DiagnosticSeverity.Error,
+                    Locations = new[]
+                    {
+                        new DiagnosticResultLocation("Test0.cs", 4, 37)
+                    }
+                },
+                new DiagnosticResult
+                {
+                    Id = DiagnosticIds.TaskCompletionSourceMustHaveRunContinuationsAsynchronouslySet,
+                    Message = "TaskCompletionSource must have TaskCreationOptions.RunContinuationsAsynchronously set",
+                    Severity = DiagnosticSeverity.Error,
+                    Locations = new[]
+                    {
+                        new DiagnosticResultLocation("Test0.cs", 6, 40)
+                    }
+                },
+                new DiagnosticResult
+                {
+                    Id = DiagnosticIds.TaskCompletionSourceMustHaveRunContinuationsAsynchronouslySet,
+                    Message = "TaskCompletionSource must have TaskCreationOptions.RunContinuationsAsynchronously set",
+                    Severity = DiagnosticSeverity.Error,
+                    Locations = new[]
+                    {
+                        new DiagnosticResultLocation("Test0.cs", 8, 37)
+                    }
+                });
+        }
+        
+        //No diagnostics expected to show up
+        [TestMethod]
+        public void NonGeneric_with_RunContinuationsAsynchronously()
+        {
+            const string input = @"
+class C
+{
+	private void Method1() { var tcs = new TaskCompletionSource(TaskContinuationOptions.RunContinuationsAsynchronously); }
+
+    private void Method2() { var tcs = new System.Threading.Tasks.TaskCompletionSource(null, System.Threading.Tasks.TaskContinuationOptions.RunContinuationsAsynchronously); }
+
+	private void Method3() { var tcs = new TaskCompletionSource(TaskContinuationOptions.RunContinuationsAsynchronously | TaskContinuationOptions.AttachedToParent); }
+}";
+            VerifyCSharpDiagnostic(input);
+        }
+
+        [TestMethod]
+        public void NonGeneric_without_RunContinuationsAsynchronously()
+        {
+            const string input = @"
+class C
+{
+	private void Method1() { var tcs = new TaskCompletionSource(); }
+
+    private void Method2() { var tcs = new System.Threading.Tasks.TaskCompletionSource(); }
+
+	private void Method3() { var tcs = new TaskCompletionSource(TaskContinuationOptions.AttachedToParent); }
 }";
             VerifyCSharpDiagnostic(
                 input,
