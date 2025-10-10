@@ -21,21 +21,18 @@ namespace Raven.CodeAnalysis.Configuration
         private static void AnalyzeSyntax(SyntaxNodeAnalysisContext context)
         {
             var invocationExpressionSyntax = (InvocationExpressionSyntax)context.Node;
-
             var expression = invocationExpressionSyntax.Expression;
             
-            if (expression == null)
-                return;
-
+            
             if (expression.IsKind(SyntaxKind.SimpleMemberAccessExpression) == false && expression.IsKind(SyntaxKind.IdentifierName) == false)
                 return;
 
-            var methodSymbol = context.SemanticModel.GetSymbolInfo(expression).Symbol as IMethodSymbol;
-
-            if (methodSymbol == null)
+            if (TryGetSymbolOrCandidate(context, expression, out IMethodSymbol methodSymbol) == false)
                 return;
 
-            if (methodSymbol.ReceiverType.Name.Equals("RavenConfiguration", StringComparison.Ordinal) == false || methodSymbol.Name.Equals("GetKey", StringComparison.Ordinal) == false)
+            // Using ToDisplayString() is more robust as it includes the full namespace
+            if (methodSymbol.ContainingType.ToDisplayString().Equals("Raven.Database.Config.RavenConfiguration", StringComparison.Ordinal) == false ||
+                methodSymbol.Name.Equals("GetKey", StringComparison.Ordinal) == false)
                 return;
 
             var argumentList = invocationExpressionSyntax.ArgumentList;
@@ -43,24 +40,46 @@ namespace Raven.CodeAnalysis.Configuration
             if (argumentList == null || argumentList.Arguments.Count != 1)
                 return;
 
-            var simpleLambda = argumentList.Arguments[0].Expression as SimpleLambdaExpressionSyntax;
-
-            var syntaxToken = simpleLambda?.Body as MemberAccessExpressionSyntax;
-
-            var propertyIdentifier = syntaxToken?.ChildNodes().OfType<IdentifierNameSyntax>().LastOrDefault();
-
-            if (propertyIdentifier == null)
+            if (!(argumentList.Arguments[0].Expression is SimpleLambdaExpressionSyntax simpleLambda))
                 return;
 
-            var propertySymbol = context.SemanticModel.GetSymbolInfo(propertyIdentifier);
-            if (propertySymbol.Symbol == null)
+            if (!(simpleLambda.Body is MemberAccessExpressionSyntax propertyAccessExpression))
                 return;
 
-            var attributes = propertySymbol.Symbol.GetAttributes();
-            if (attributes.Any(x => x.AttributeClass.ToString().Contains("ConfigurationEntryAttribute")))
+            var configurationType = methodSymbol.ContainingType;
+            
+            var propertyIdentifier = propertyAccessExpression.Name;
+            var propertyName = propertyIdentifier.Identifier.ValueText;
+
+            var propertySymbol = configurationType.GetMembers(propertyName).OfType<IPropertySymbol>().FirstOrDefault();
+
+            // Get the symbol from the entire member access expression (e.g., "x.OrdinaryProperty")
+            // This is the key change
+            if (propertySymbol == null) 
                 return;
 
+            var attributes = propertySymbol.GetAttributes();
+            // A more robust check for the attribute by its name
+            if (attributes.Any(attr => attr.AttributeClass.Name.Equals("ConfigurationEntryAttribute", StringComparison.Ordinal)))
+                return;
+
+            // The diagnostic should be reported on the name of the property
             ReportDiagnostic(context, propertyIdentifier, propertyIdentifier.Identifier.ValueText);
+        }
+
+        private static bool TryGetSymbolOrCandidate<TSymbol>(SyntaxNodeAnalysisContext context, ExpressionSyntax expression, out TSymbol result)
+            where TSymbol : class, ISymbol
+        {
+            var info = context.SemanticModel.GetSymbolInfo(expression);
+
+            var symbol = info.Symbol as TSymbol;
+            if (symbol == null && info.CandidateSymbols.Length == 1)
+            {
+                symbol = info.CandidateSymbols[0] as TSymbol;
+            }
+
+            result = symbol;
+            return symbol != null;
         }
 
         private static void ReportDiagnostic(
