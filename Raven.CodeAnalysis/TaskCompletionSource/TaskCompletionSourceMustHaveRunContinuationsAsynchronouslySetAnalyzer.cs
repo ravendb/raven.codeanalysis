@@ -26,19 +26,9 @@ namespace Raven.CodeAnalysis.TaskCompletionSource
         private static void AnalyzeSyntax(SyntaxNodeAnalysisContext context)
         {
             var objectCreationExpressionSyntax = (ObjectCreationExpressionSyntax)context.Node;
-            var genericNameSyntax = objectCreationExpressionSyntax.Type as GenericNameSyntax;
-            if (genericNameSyntax == null)
-            {
-                var qualifiedNameSyntax = objectCreationExpressionSyntax.Type as QualifiedNameSyntax;
-                if (qualifiedNameSyntax == null)
-                    return;
 
-                genericNameSyntax = qualifiedNameSyntax.Right as GenericNameSyntax;
-                if (genericNameSyntax == null)
-                    return;
-            }
-
-            if (string.Equals(genericNameSyntax.Identifier.Text, TaskCompletionSourceName) == false)
+            if (IsGenericTaskCompletionSourceCreation(objectCreationExpressionSyntax) == false &&
+                IsNonGenericTaskCompletionSourceCreation(objectCreationExpressionSyntax) == false)
                 return;
 
             var arguments = objectCreationExpressionSyntax.ArgumentList;
@@ -49,6 +39,31 @@ namespace Raven.CodeAnalysis.TaskCompletionSource
             }
 
             ReportDiagnostic(context, objectCreationExpressionSyntax);
+        }
+
+        private static bool IsGenericTaskCompletionSourceCreation(ObjectCreationExpressionSyntax objectCreationExpressionSyntax) =>
+            IsTaskCompletionSource<GenericNameSyntax>(objectCreationExpressionSyntax);
+
+        private static bool IsNonGenericTaskCompletionSourceCreation(ObjectCreationExpressionSyntax objectCreationExpressionSyntax) =>
+            IsTaskCompletionSource<IdentifierNameSyntax>(objectCreationExpressionSyntax);
+
+        private static bool IsTaskCompletionSource<TNameSyntax>(ObjectCreationExpressionSyntax objectCreationExpressionSyntax)
+            where TNameSyntax : SimpleNameSyntax
+        {
+            var nameSyntax = objectCreationExpressionSyntax.Type as TNameSyntax;
+
+            if (nameSyntax == null)
+            {
+                var qualifiedNameSyntax = objectCreationExpressionSyntax.Type as QualifiedNameSyntax;
+                if (qualifiedNameSyntax == null)
+                    return false;
+
+                nameSyntax = qualifiedNameSyntax.Right as TNameSyntax;
+                if (nameSyntax == null)
+                    return false;
+            }
+
+            return string.Equals(nameSyntax.Identifier.Text, TaskCompletionSourceName);
         }
 
         private static bool IsRunContinuationsAsynchronously(ExpressionSyntax expression)
