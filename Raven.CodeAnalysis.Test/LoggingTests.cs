@@ -101,12 +101,10 @@ class C
 			VerifyCSharpFix(input, output);
 		}
 
-#if NET45
         protected override CodeFixProvider GetCSharpCodeFixProvider()
 		{
 			return new LoggingCodeFix();
 		}
-#endif
 
 		protected override DiagnosticAnalyzer GetCSharpDiagnosticAnalyzer()
 		{

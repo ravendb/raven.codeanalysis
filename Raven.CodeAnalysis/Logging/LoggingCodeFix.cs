@@ -1,7 +1,6 @@
-﻿#if NET45
+﻿
 using System.Collections.Immutable;
 using System.Linq;
-using System.Threading;
 using System.Threading.Tasks;
 
 using Microsoft.CodeAnalysis;
@@ -29,7 +28,7 @@ namespace Raven.CodeAnalysis.Logging
 			context.RegisterCodeFix(CodeAction.Create("Wrap Debug and DebugException with IsDebugEnabled", token => WrapAsync(context.Document, syntaxNode, token)), context.Diagnostics);
 		}
 
-		private static async Task<Document> WrapAsync(Document document, StatementSyntax expressionStatement, CancellationToken token)
+		private static async Task<Document> WrapAsync(Document document, StatementSyntax expressionStatement, System.Threading.CancellationToken token)
 		{
 			var identifierNameSyntax =
 				expressionStatement.DescendantNodes().FirstOrDefault(x => x.IsKind(SyntaxKind.IdentifierName)) as
@@ -50,4 +49,3 @@ namespace Raven.CodeAnalysis.Logging
 		}
 	}
 }
-#endif
