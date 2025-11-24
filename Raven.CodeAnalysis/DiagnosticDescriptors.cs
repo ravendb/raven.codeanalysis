@@ -76,5 +76,13 @@ namespace Raven.CodeAnalysis
             category: DiagnosticCategories.ReturningTaskInsideUsingStatement,
             defaultSeverity: DiagnosticSeverity.Error,
             isEnabledByDefault: true);
+
+        public static readonly DiagnosticDescriptor BooleanMethodNegation = new DiagnosticDescriptor(
+            id: DiagnosticIds.BooleanMethodNegation,
+            title: "Avoid negating boolean method conditions",
+            messageFormat: "Negated boolean method '{0}' conditions should be rewritten as {0}(...) == false",
+            category: DiagnosticCategories.BooleanMethodNegation,
+            defaultSeverity: DiagnosticSeverity.Error,
+            isEnabledByDefault: true);
     }
 }
