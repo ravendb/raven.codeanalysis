@@ -17,5 +17,7 @@
         public const string TaskCompletionSource = "TaskCompletionSource";
 
         public const string ReturningTaskInsideUsingStatement = "ReturnTaskInsideUsingStatement";
+
+        public const string BooleanMethodNegation = "BooleanMethodNegation";
     }
 }

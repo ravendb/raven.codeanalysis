@@ -19,5 +19,7 @@
         public const string TaskCompletionSourceMustHaveRunContinuationsAsynchronouslySet = "RDB0008";
 
         public const string MustNotReturnTaskInsideUsingStatementAnalyzer = "RDB0009";
+
+        public const string BooleanMethodNegation = "RDB0010";
     }
 }
