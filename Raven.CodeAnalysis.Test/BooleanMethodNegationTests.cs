@@ -71,6 +71,72 @@ class C
         }
 
         [TestMethod]
+        public void ShouldReportDiagnosticOnNegatedBooleanMethod_param()
+        {
+            const string input = @"
+class C
+{
+    private bool HasPermission()
+    {
+        return false;
+    }
+
+    static void M(C c)
+    {
+        if (!c.HasPermission())
+        {
+        }
+    }
+}";
+            VerifyCSharpDiagnostic(input, new DiagnosticResult
+            {
+                Id = DiagnosticIds.BooleanMethodNegation,
+                Message = "Negated boolean method 'HasPermission' conditions should be rewritten as HasPermission(...) == false",
+                Severity = DiagnosticSeverity.Error,
+                Locations =
+                [
+                    new DiagnosticResultLocation("Test0.cs", 11, 13)
+                ]
+            });
+        }
+
+        [TestMethod]
+        public void ShouldReportDiagnosticOnNegatedBooleanMethod_field()
+        {
+            const string input = @"
+class C
+{
+    private bool HasPermission()
+    {
+        return false;
+    }
+}
+
+class D
+{
+    private C _c;
+
+    void M()
+    {
+        if (!_c.HasPermission())
+        {
+        }
+    }
+}
+";
+            VerifyCSharpDiagnostic(input, new DiagnosticResult
+            {
+                Id = DiagnosticIds.BooleanMethodNegation,
+                Message = "Negated boolean method 'HasPermission' conditions should be rewritten as HasPermission(...) == false",
+                Severity = DiagnosticSeverity.Error,
+                Locations =
+                [
+                    new DiagnosticResultLocation("Test0.cs", 11, 13)
+                ]
+            });
+        }
+
+        [TestMethod]
         public void ShouldNotReportDiagnosticOnNonNegatedBooleanMethod()
         {
             const string input = @"
