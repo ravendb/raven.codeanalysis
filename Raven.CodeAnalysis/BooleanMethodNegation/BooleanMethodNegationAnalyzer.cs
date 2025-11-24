@@ -27,12 +27,11 @@ namespace Raven.CodeAnalysis.BooleanMethodNegation
                 operand = parenthesizedExpressionSyntax.Expression;
             }
 
-            var invocationExpressionSyntax = operand as InvocationExpressionSyntax;
-            if (invocationExpressionSyntax == null)
+            if (operand is InvocationExpressionSyntax invocation == false)
                 return;
 
             var semanticModel = context.SemanticModel;
-            var methodSymbol = semanticModel.GetSymbolInfo(invocationExpressionSyntax, context.CancellationToken).Symbol as IMethodSymbol;
+            var methodSymbol = semanticModel.GetSymbolInfo(invocation, context.CancellationToken).Symbol as IMethodSymbol;
 
             if (methodSymbol?.ReturnType?.SpecialType != SpecialType.System_Boolean)
                 return;
