@@ -106,7 +106,7 @@ class C
             const string input = @"
 class C
 {
-    private bool HasPermission()
+    internal bool HasPermission()
     {
         return false;
     }
@@ -131,7 +131,7 @@ class D
                 Severity = DiagnosticSeverity.Error,
                 Locations =
                 [
-                    new DiagnosticResultLocation("Test0.cs", 11, 13)
+                    new DiagnosticResultLocation("Test0.cs", 16, 13)
                 ]
             });
         }
