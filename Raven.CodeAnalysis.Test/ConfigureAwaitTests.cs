@@ -116,7 +116,26 @@ class C
 			});
 		}
 
-		protected override DiagnosticAnalyzer GetCSharpDiagnosticAnalyzer()
+        [TestMethod]
+        public void TestMethod6_VariableArgument()
+        {
+            const string input = @"
+class C
+{
+	private Task SthAsync() { return null; }
+	private bool _continueOnCapturedContext;
+
+	async Task M()
+    {
+		await SthAsync().ConfigureAwait(_continueOnCapturedContext);
+    }
+}";
+
+            VerifyCSharpDiagnostic(input);
+        }
+
+
+        protected override DiagnosticAnalyzer GetCSharpDiagnosticAnalyzer()
 		{
 			return new ConfigureAwaitAnalyzer();
 		}

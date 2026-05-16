@@ -26,10 +26,11 @@ namespace Raven.CodeAnalysis.ConfigureAwait
 
 			if (awaitedExpression?.Name.Identifier.Text == "ConfigureAwait")
 			{
-				var configureAwaitIsFalse = invocationExpressionSyntax.ArgumentList.Arguments.Single().Expression.IsKind(SyntaxKind.FalseLiteralExpression);
-				if (configureAwaitIsFalse)
-					return;
-			}
+                var argument = invocationExpressionSyntax.ArgumentList.Arguments.Single().Expression;
+                var configureAwaitIsExplicitTrue = argument.IsKind(SyntaxKind.TrueLiteralExpression);
+                if (configureAwaitIsExplicitTrue == false)
+                    return;
+            }
 
 			ReportDiagnostic(context, awaitExpressionSyntax);
 		}
