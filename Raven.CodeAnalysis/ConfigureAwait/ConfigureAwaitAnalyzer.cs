@@ -26,15 +26,11 @@ namespace Raven.CodeAnalysis.ConfigureAwait
 
 			if (awaitedExpression?.Name.Identifier.Text == "ConfigureAwait")
 			{
-                // safely get the first argument, or null if the user hasn't typed it yet
-                var argument = invocationExpressionSyntax.ArgumentList.Arguments.FirstOrDefault()?.Expression;
-                if (argument != null)
-                {
-                    var configureAwaitIsExplicitTrue = argument.IsKind(SyntaxKind.TrueLiteralExpression);
-                    if (configureAwaitIsExplicitTrue == false)
-                        return;
-                }
-            }
+				// argument list may be empty during typing — FirstOrDefault avoids a throw from Single()
+				var argument = invocationExpressionSyntax.ArgumentList.Arguments.FirstOrDefault()?.Expression;
+				if (argument == null || !argument.IsKind(SyntaxKind.TrueLiteralExpression))
+					return;
+			}
 
 			ReportDiagnostic(context, awaitExpressionSyntax);
 		}

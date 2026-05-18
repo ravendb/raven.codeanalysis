@@ -116,10 +116,10 @@ class C
 			});
 		}
 
-        [TestMethod]
-        public void TestMethod6_VariableArgument()
-        {
-            const string input = @"
+		[TestMethod]
+		public void TestMethod6_VariableArgument()
+		{
+			const string input = @"
 class C
 {
 	private Task SthAsync() { return null; }
@@ -131,11 +131,27 @@ class C
     }
 }";
 
-            VerifyCSharpDiagnostic(input);
-        }
+			VerifyCSharpDiagnostic(input);
+		}
 
+		[TestMethod]
+		public void TestMethod7_NoArgument()
+		{
+			const string input = @"
+class C
+{
+	private Task SthAsync() { return null; }
 
-        protected override DiagnosticAnalyzer GetCSharpDiagnosticAnalyzer()
+	async Task M()
+    {
+		await SthAsync().ConfigureAwait();
+    }
+}";
+
+			VerifyCSharpDiagnostic(input);
+		}
+
+		protected override DiagnosticAnalyzer GetCSharpDiagnosticAnalyzer()
 		{
 			return new ConfigureAwaitAnalyzer();
 		}
